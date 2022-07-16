@@ -7,3 +7,4 @@ Uses the Speech API in windows along with the tarkov.dev API to provide item pri
 
 Run program and say "Price \<Item\>" to reccieve the items flea market price.
 
+Will make bot speak with russian accent when i have time
