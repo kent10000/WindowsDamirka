@@ -17,8 +17,6 @@ if (list == null)
 //remove every \" from the list
 list = list.Select(x => x.Replace("\"", "")).ToArray();
 
-//var grammar = new Grammar(price);
-
 var grammar = SpeechRec.MakeGrammar(list, "price");
 
 var engine = new SpeechRecognitionEngine(new System.Globalization.CultureInfo("en-US"));
