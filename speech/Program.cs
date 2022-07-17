@@ -32,12 +32,18 @@ price.Append(items);
 
 var grammar = new Grammar(price);
 
-var engine = new SpeechRecognizer();
+var engine = new SpeechRecognitionEngine(new System.Globalization.CultureInfo("en-US"));
+
+engine.SetInputToDefaultAudioDevice();
 engine.LoadGrammar(grammar);
+
+engine.RecognizeAsync(RecognizeMode.Multiple);
 
 var speech = new SpeechSynthesizer();
 
 var priceGetter = new TarkovTool("items", new []{"avg24hPrice"});
+
+
 
 engine.SpeechRecognized += (async (_, eventArgs) =>
 {
