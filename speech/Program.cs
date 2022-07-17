@@ -17,35 +17,20 @@ if (list == null)
 //remove every \" from the list
 list = list.Select(x => x.Replace("\"", "")).ToArray();
 
+//var grammar = new Grammar(price);
 
-
-var c = new Choices(list);
-
-
-
-var items = new GrammarBuilder(c);
-
-var price = new GrammarBuilder("price");
-price.Append(items);
-
-
-
-var grammar = new Grammar(price);
+var grammar = SpeechRec.MakeGrammar(list, "price");
 
 var engine = new SpeechRecognitionEngine(new System.Globalization.CultureInfo("en-US"));
-
 engine.SetInputToDefaultAudioDevice();
 engine.LoadGrammar(grammar);
-
 engine.RecognizeAsync(RecognizeMode.Multiple);
 
 var speech = new SpeechSynthesizer();
 
 var priceGetter = new TarkovTool("items", new []{"avg24hPrice"});
 
-
-
-engine.SpeechRecognized += (async (_, eventArgs) =>
+engine.SpeechRecognized += async (_, eventArgs) =>
 {
     var t = eventArgs.Result.Words[1].Text;
     //Console.WriteLine(t);
@@ -63,7 +48,7 @@ engine.SpeechRecognized += (async (_, eventArgs) =>
     speech.SpeakAsync("The price of " + t + " is " + itemPrice[0] + " roubles");
     
     
-});
+};
 //for testing api
 /*
 var levels = new TarkovTool("playerLevels",new[]{"level", "exp"});
