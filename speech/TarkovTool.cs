@@ -1,5 +1,9 @@
-﻿using System.Net.Http.Json;
+﻿#region
+
+using System.Net.Http.Json;
 using Newtonsoft.Json.Linq;
+
+#endregion
 
 namespace speech;
 
@@ -16,7 +20,7 @@ public class TarkovTool
         _httpClient = new HttpClient();
         _httpClient.BaseAddress = new Uri("https://api.tarkov.dev/graphql");
     }
-    
+
     public async Task<string[]?> GetResponse(KeyValuePair<string, string> args)
     {
         var responses = new List<string>();
@@ -78,7 +82,7 @@ public class TarkovTool
 
         return responses.Count == 0 ? null : responses.ToArray();
     }
-    
+
     public async Task<string[]?> GetResponse()
     {
         var responses = new List<string>();
@@ -100,7 +104,7 @@ public class TarkovTool
 
         details = details?.TrimEnd();
 
-        var q = "{" + _query +  "{" + details + "}}";
+        var q = "{" + _query + "{" + details + "}}";
 
         /*var request = new GraphQLRequest
         {
