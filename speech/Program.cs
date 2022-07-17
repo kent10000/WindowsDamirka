@@ -16,8 +16,10 @@ if (list == null)
 
 //remove every \" from the list
 list = list.Select(x => x.Replace("\"", "")).ToArray();
+var prefixes = new[] { "whats the price of", "how much is" };
+var grammar = SpeechRec.MakeGrammar(list, prefixes, true);
 
-var grammar = SpeechRec.MakeGrammar(list, new[] {"price"});
+
 
 var engine = new SpeechRecognitionEngine(new System.Globalization.CultureInfo("en-US"));
 engine.SetInputToDefaultAudioDevice();
@@ -52,9 +54,12 @@ var priceGetter = new TarkovTool("items", new []{"avg24hPrice"});
 
 engine.SpeechRecognized += async (_, eventArgs) =>
 {
-    var t = eventArgs.Result.Words[1].Text;
+    var text = eventArgs.Result.Text;
+    if (text.Contains("Damirka")) {text = text.Replace("Damirka", "").Trim();}
+    var item = (from phrase in prefixes where text.ToLower().Contains(phrase) select text.Replace(phrase, "").Trim()).FirstOrDefault();
+    if (item == null) return;
     //Console.WriteLine(t);
-    var itemPrice = await priceGetter.GetResponse(new KeyValuePair<string, string>("name", t));
+    var itemPrice = await priceGetter.GetResponse(new KeyValuePair<string, string>("name", item));
     if (itemPrice == null || itemPrice.Length == 0)
     {
         speech.SpeakAsync("Item not found");
@@ -62,10 +67,10 @@ engine.SpeechRecognized += async (_, eventArgs) =>
     } 
     if (itemPrice[0] == "0")
     {
-        speech.SpeakAsync(t + " is not for sale on the flea market");
+        speech.SpeakAsync(item + " is not for sale on the flea market");
         return;
     }
-    speech.SpeakAsync("The price of " + t + " is " + itemPrice[0] + " roubles");
+    speech.SpeakAsync("The price of " + item + " is " + itemPrice[0] + " roubles");
     
     //TODO: Damirka says price in russian 
     
