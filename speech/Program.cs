@@ -1,5 +1,6 @@
 ﻿using System.Speech.Recognition;
 using System.Speech.Synthesis;
+using Humanizer;
 using speech;
 
 #pragma warning disable CA1416
@@ -48,10 +49,9 @@ foreach (var voice in voices)
     Console.WriteLine(voice.VoiceInfo.Name);
 }*/
 
-var num = 87697;
+//var num = 87697;
 //convert num to words
 var priceGetter = new TarkovTool("items", new []{"avg24hPrice"});
-
 engine.SpeechRecognized += async (_, eventArgs) =>
 {
     var text = eventArgs.Result.Text;
@@ -70,9 +70,10 @@ engine.SpeechRecognized += async (_, eventArgs) =>
         speech.SpeakAsync(item + " is not for sale on the flea market");
         return;
     }
-    speech.SpeakAsync("The price of " + item + " is " + itemPrice[0] + " roubles");
+    var price = int.Parse(itemPrice[0]);
+    speech.SpeakAsync("The price of " + item + " is " + price.ToWords() + " roubles");
     
-    //TODO: Damirka says price in russian 
+    
     
     
 };
