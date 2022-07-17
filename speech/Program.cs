@@ -17,7 +17,7 @@ if (list == null)
 //remove every \" from the list
 list = list.Select(x => x.Replace("\"", "")).ToArray();
 
-var grammar = SpeechRec.MakeGrammar(list, "price");
+var grammar = SpeechRec.MakeGrammar(list, new[] {"price"});
 
 var engine = new SpeechRecognitionEngine(new System.Globalization.CultureInfo("en-US"));
 engine.SetInputToDefaultAudioDevice();
@@ -25,7 +25,29 @@ engine.LoadGrammar(grammar);
 engine.RecognizeAsync(RecognizeMode.Multiple);
 
 var speech = new SpeechSynthesizer();
+const string voice = "Microsoft Irina Desktop";
+try
+{
+    speech.SelectVoice(voice);
+}
+catch (Exception)
+{
+    Console.WriteLine("Warn: Unable to find voice, \"{0}\".\nIf you would like Damirka to speak with a russian accent,\nplease install the Russian voice pack in (Settings > Speech)", voice);
+    Console.WriteLine("Damirka will now speak with the default voice instead.\n");
+}
 
+
+
+/*var voices = speech.GetInstalledVoices();
+
+//list each voice in the list
+foreach (var voice in voices)
+{
+    Console.WriteLine(voice.VoiceInfo.Name);
+}*/
+
+var num = 87697;
+//convert num to words
 var priceGetter = new TarkovTool("items", new []{"avg24hPrice"});
 
 engine.SpeechRecognized += async (_, eventArgs) =>
@@ -45,6 +67,8 @@ engine.SpeechRecognized += async (_, eventArgs) =>
     }
     speech.SpeakAsync("The price of " + t + " is " + itemPrice[0] + " roubles");
     
+    //TODO: Damirka says price in russian 
+    
     
 };
 //for testing api
@@ -58,7 +82,6 @@ foreach (var i in l)
     Console.WriteLine(i);
 }*/
 
+Console.WriteLine("Damirka is listening...\nYou are free to minimize the window.\nPress any key to exit...");
 
-
-Console.WriteLine("Press any key to exit...");
-Console.ReadKey();
+Console.ReadKey(true);

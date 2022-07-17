@@ -13,14 +13,19 @@ public static class SpeechRec
         return g;
     }
     
-    public static Grammar MakeGrammar(string[] words, string prefix)
+    public static Grammar MakeGrammar(string[] words, string[] prefixes)
     {
         
         var choices = new Choices(words);
         var gb = new GrammarBuilder(choices);
-        var gbp = new GrammarBuilder(prefix);
-        gbp.Append(gb);
-
+        var gbp = new GrammarBuilder();
+        foreach (var prefix in prefixes)
+        {
+            var gbt = new GrammarBuilder(prefix);
+            gbt.Append(gb);
+            gbp = GrammarBuilder.Add(gbp, gbt);
+        }
+        
         var g = new Grammar(gbp);
         return g;
     }
