@@ -74,8 +74,8 @@ engine.SpeechRecognized += async (_, eventArgs) =>
     var price = int.Parse(itemPrice[0]);
     speech.SpeakAsync("The price of " + item + " is " + price.ToWords() + " roubles");
 };
-engine.RecognizeAsyncStop();
+/*engine.RecognizeAsyncStop();
 engine.EmulateRecognizeAsync("Damirka how much is toolset"); 
-
+*/
 Console.WriteLine("Damirka is listening...\nYou are free to minimize the window.\nPress any key to exit...");
 Console.ReadKey(true);
