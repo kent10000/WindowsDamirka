@@ -1,5 +1,6 @@
 ﻿#region
 
+using System.Collections;
 using System.Net.Http.Json;
 using Newtonsoft.Json.Linq;
 
@@ -28,12 +29,12 @@ public class TarkovTool
         _languageCode = languageCode;
     }
 
-    public async Task<string[]?> GetResponse(IEnumerable<KeyValuePair<string, dynamic>> args)
+    public async Task<string[]?> GetResponse(IEnumerable<GraphQlRequest> args)
     {
         var responses = new List<string>();
 
 
-        //var arguments = args.Aggregate("(", (current, arg) => current + (arg.Key[^1] == 's' ? $"{arg.Key}: {arg.Value}" : $"{arg.Key}: \"{arg.Value}\"" + ", "));
+        //var arguments = args.Aggregate("(", (current, arg) => current + (arg.ArgumentName[^1] == 's' ? $"{arg.ArgumentName}: {arg.ArgumentValue}" : $"{arg.ArgumentName}: \"{arg.ArgumentValue}\"" + ", "));
 
         var arguments = "(";
         
@@ -45,15 +46,15 @@ public class TarkovTool
         
         foreach (var arg in args)
         {
-            if (arg.Value is string)
+            if (arg.ArgumentValue is string)
             {
-                arguments += $"{arg.Key}: \"{arg.Value}\", ";
-            } else if (IsArray(arg.Value))
+                arguments += $"{arg.ArgumentName}: \"{arg.ArgumentValue}\", ";
+            } else if (IsArray(arg.ArgumentValue))
             {
-                if (arg.Value.GetType() == typeof(string[]))
+                if (arg.ArgumentValue.GetType() == typeof(string[]))
                 {
-                    arguments += $"{arg.Key}: [";
-                    foreach (var item in arg.Value)
+                    arguments += $"{arg.ArgumentName}: [";
+                    foreach (var item in arg.ArgumentValue)
                     {
                         arguments += $"\"{item}\", ";
                     }
@@ -62,8 +63,8 @@ public class TarkovTool
                 }
                 else
                 {
-                    arguments += $"{arg.Key}: [";
-                    foreach (var item in arg.Value)
+                    arguments += $"{arg.ArgumentName}: [";
+                    foreach (var item in arg.ArgumentValue)
                     {
                         arguments += $"{item}, ";
                     }
@@ -73,7 +74,7 @@ public class TarkovTool
             }
             else
             {
-                arguments += $"{arg.Key}: {arg.Value}, ";
+                arguments += $"{arg.ArgumentName}: {arg.ArgumentValue}, ";
             }
         }
         arguments = arguments.Remove(arguments.Length - 2);
@@ -208,7 +209,7 @@ public class TarkovTool
         return responses.Count == 0 ? null : responses.ToArray();
     }
 
-    public async Task<string[]?> GetResponse(KeyValuePair<string, dynamic> args)
+    public async Task<string[]?> GetResponse(GraphQlRequest args)
     {
         return await GetResponse(new[] { args });
     }
@@ -227,6 +228,85 @@ public class TarkovTool
         return true;
     }
     
+}
+
+public class GraphQlRequest 
+{
+    public string ArgumentName { get; }
+
+    public dynamic ArgumentValue { get; }
+
+
+    public GraphQlRequest(string argumentName, ItemType argumentValue)
+    {
+        ArgumentName = argumentName;
+        ArgumentValue = argumentValue;
+    }
+    public GraphQlRequest(string argumentName, ItemCategoryName argumentValue)
+    {
+        ArgumentName = argumentName;
+        ArgumentValue = argumentValue;
+    }
+    public GraphQlRequest(string argumentName, TraderName argumentValue)
+    {
+        ArgumentName = argumentName;
+        ArgumentValue = argumentValue;
+    }
+    public GraphQlRequest(string argumentName, ItemSourceName argumentValue)
+    {
+        ArgumentName = argumentName;
+        ArgumentValue = argumentValue;
+    }
+    public GraphQlRequest(string argumentName, RequirementType argumentValue)
+    {
+        ArgumentName = argumentName;
+        ArgumentValue = argumentValue;
+    }
+    public GraphQlRequest(string argumentName, StatusCode argumentValue)
+    {
+        ArgumentName = argumentName;
+        ArgumentValue = argumentValue;
+    }
+    public GraphQlRequest(string argumentName, ItemType[] argumentValue)
+    {
+        ArgumentName = argumentName;
+        ArgumentValue = argumentValue;
+    }
+    public GraphQlRequest(string argumentName, ItemCategoryName[] argumentValue)
+    {
+        ArgumentName = argumentName;
+        ArgumentValue = argumentValue;
+    }
+    public GraphQlRequest(string argumentName, TraderName[] argumentValue)
+    {
+        ArgumentName = argumentName;
+        ArgumentValue = argumentValue;
+    }
+    public GraphQlRequest(string argumentName, ItemSourceName[] argumentValue)
+    {
+        ArgumentName = argumentName;
+        ArgumentValue = argumentValue;
+    }
+    public GraphQlRequest(string argumentName, RequirementType[] argumentValue)
+    {
+        ArgumentName = argumentName;
+        ArgumentValue = argumentValue;
+    }
+    public GraphQlRequest(string argumentName, StatusCode[] argumentValue)
+    {
+        ArgumentName = argumentName;
+        ArgumentValue = argumentValue;
+    }
+    public GraphQlRequest(string argumentName, string argumentValue)
+    {
+        ArgumentName = argumentName;
+        ArgumentValue = argumentValue;
+    }
+    public GraphQlRequest(string argumentName, IEnumerable argumentValue)
+    {
+        ArgumentName = argumentName;
+        ArgumentValue = argumentValue;
+    }
     
 }
 
