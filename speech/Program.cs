@@ -57,8 +57,8 @@ engine.SpeechRecognized += async (_, eventArgs) =>
         .FirstOrDefault();
     if (item == null) return;
     //Console.WriteLine(t);
-    //var itemPrice = await priceGetter.GetResponse(new KeyValuePair<string, string>("name", item));
-    var itemPrice = await priceGetter.GetResponse(new[] {new KeyValuePair<string, dynamic>("names", new[] {"Toolset", "Awl"}), /*new KeyValuePair<string, dynamic>("type", ItemType.barter)*/});
+    var itemPrice = await priceGetter.GetResponse(new KeyValuePair<string, dynamic>("name", item));
+    //var itemPrice = await priceGetter.GetResponse(new[] {new KeyValuePair<string, dynamic>("names", new[] {"Toolset", "Awl"}), /*new KeyValuePair<string, dynamic>("type", ItemType.barter)*/});
     if (itemPrice == null || itemPrice.Length == 0)
     {
         speech.SpeakAsync("Item not found");
