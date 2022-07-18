@@ -230,7 +230,7 @@ public class TarkovTool
     
 }
 
-public class GraphQlRequest 
+public struct GraphQlRequest 
 {
     public string ArgumentName { get; }
 
