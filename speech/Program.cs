@@ -49,7 +49,6 @@ foreach (var voice in voices)
 }*/
 
 //Todo: add more commands from api
-
 engine.SpeechRecognized += async (_, eventArgs) =>
 {
     var text = eventArgs.Result.Text;
@@ -58,7 +57,8 @@ engine.SpeechRecognized += async (_, eventArgs) =>
         .FirstOrDefault();
     if (item == null) return;
     //Console.WriteLine(t);
-    var itemPrice = await priceGetter.GetResponse(new KeyValuePair<string, string>("name", item));
+    //var itemPrice = await priceGetter.GetResponse(new KeyValuePair<string, string>("name", item));
+    var itemPrice = await priceGetter.GetResponse(new[] {new KeyValuePair<string, dynamic>("names", new[] {"Toolset", "Awl"}), /*new KeyValuePair<string, dynamic>("type", ItemType.barter)*/});
     if (itemPrice == null || itemPrice.Length == 0)
     {
         speech.SpeakAsync("Item not found");
@@ -74,6 +74,8 @@ engine.SpeechRecognized += async (_, eventArgs) =>
     var price = int.Parse(itemPrice[0]);
     speech.SpeakAsync("The price of " + item + " is " + price.ToWords() + " roubles");
 };
+engine.RecognizeAsyncStop();
+engine.EmulateRecognizeAsync("Damirka how much is toolset"); 
 
 Console.WriteLine("Damirka is listening...\nYou are free to minimize the window.\nPress any key to exit...");
 Console.ReadKey(true);
